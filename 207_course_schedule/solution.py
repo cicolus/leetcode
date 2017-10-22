@@ -5,7 +5,7 @@
 # Given the total number of courses and a list of prerequisite pairs, is it
 # possible for you to finish all courses?
 
-import heapq
+import queue
 
 example_test_1 = [2, [[0, 1]]]           # possible
 example_test_2 = [2, [[0, 1], [1, 0]]]  # impossible
@@ -18,6 +18,14 @@ example_test_2 = [2, [[0, 1], [1, 0]]]  # impossible
 #     2
 test_1 = [[1, 0], [2, 0], [3, 1], [3, 2], [4, 3]] # possible
 
+#
+#     1    <-
+#   /   \     \
+#  0      3 -- 4
+#   \   /
+#     2
+test_2 = [[1, 0], [2, 0], [3, 1], [3, 2], [4, 3], [1, 4]] # impossible
+
 
 class Solution(object):
     def canFinish(self, numCourses, prerequisites):
@@ -28,8 +36,8 @@ class Solution(object):
         """
 
         # Represent the courses as a graph and do Topological sort
-        in_degrees = dict(zip([0]*numCourses, range(numCourses)))
-        graph = {}
+        in_degrees = dict(zip(list(range(numCourses)), [0]*numCourses))
+        graph = dict(zip(list(range(numCourses)), [[] for i in range(numCourses)]))
 
         # build graph
 
@@ -45,19 +53,31 @@ class Solution(object):
 
         # prepare for Topological sort
 
-        h = []
+        q = queue.Queue()
 
         for node in in_degrees:
-            heapq.heappush(h, (in_degrees[node], node))
+            if in_degrees[node] == 0:
+                q.put(node)
 
-        topo_sorted = {}
+        topo_sorted = set()
 
-        # while h:
+        # topological sort
 
+        while q.qsize() > 0:
+            node = q.get()
+            topo_sorted.add(node)
+            for adj in graph[node]:
+                in_degrees[adj] -= 1
+                if in_degrees[adj] == 0:
+                    q.put(adj)
 
-        pass
+        if len(topo_sorted) == numCourses:
+            return True
+        else:
+            return False
 
 
 if __name__ == '__main__':
     sol = Solution()
-    sol.canFinish(4, test_1)
+    print(sol.canFinish(5, test_1))
+    print(sol.canFinish(5, test_2))
