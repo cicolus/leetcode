@@ -72,6 +72,23 @@ class Solution:
                 return memo[(i+1, j+1)]
             return False
 
+    def _is_match_slow(self, text, i, pattern, j):
+        if j == len(pattern):
+            return i == len(text)
+
+        if len(pattern) > j+1 and pattern[j+1] == '*':
+            if i == len(text):
+                return self._is_match_slow(text, i, pattern, j+2)
+            if text[i] == pattern[j] or pattern[j] == '.':
+                return self._is_match_slow(text, i+1, pattern, j) or self._is_match_slow(text, i, pattern, j+2)
+            return self._is_match_slow(text, i, pattern, j+2)
+        else:
+            if i == len(text):
+                return False
+            if (text[i] == pattern[j] or pattern[j] == '.'):
+                return self._is_match_slow(text, i+1, pattern, j+1)
+            return False
+
 
 if __name__ == '__main__':
     test = Solution()
