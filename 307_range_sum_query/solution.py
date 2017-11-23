@@ -7,7 +7,7 @@ class NumArray:
         :type nums: List[int]
         """
         self.size = len(nums)
-        self.nums = nums
+        self.nums = nums # type: List[int]
         if self.size > 0:
             segment_tree_size = (1 << int(ceil(log2(self.size)) + 1)) - 1
         else:
