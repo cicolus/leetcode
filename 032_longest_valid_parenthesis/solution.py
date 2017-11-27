@@ -13,7 +13,8 @@ class Solution:
             if s[idx] == ')':
                 if s[idx-1] == '(':
                     dp[idx] = 2 + dp[idx-2] if idx >= 2 else 2
-                elif dp[idx-1] > 0 and idx - dp[idx-1] - 1 >= 0 and s[idx - dp[idx-1] - 1] == '(':
+                elif dp[idx-1] > 0 and idx - dp[idx-1] - 1 >= 0 \
+                        and s[idx - dp[idx-1] - 1] == '(':
                     dp[idx] = dp[idx-1] + 2
                     if idx - dp[idx-1] - 1 > 0:
                         dp[idx] += dp[idx - dp[idx - 1] - 2]
