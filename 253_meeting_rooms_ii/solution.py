@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Tuple
 from heapq import heappop, heappush
 
 """
@@ -29,21 +29,25 @@ class Solution:
         """
         if not intervals:
             return 0
-        intervals = sorted(intervals, key=lambda x : x.start)
-        counter = 1
-        max_depth = 1
-        curr = intervals[0]
+        intervals = sorted(list(map(lambda x : (x.start, x.end), intervals)))
+        assignments = [(intervals[0][1], [intervals[0]])] # type: List[Tuple[int, List[Interval]]]
         for i in range(1, len(intervals)):
-            if intervals[i].start < curr.end:
-                counter += 1
+            end, room_schedule = heappop(assignments) # type: int, List[Interval]
+            if intervals[i][0] < end:
+                heappush(assignments, (end, room_schedule))
+                heappush(assignments, (intervals[i][1], [intervals[i]]))
             else:
-                max_depth = max(counter, max_depth)
-                counter = 1
-                curr = intervals[i]
+                room_schedule.append(intervals[i])
+                heappush(assignments, (intervals[i][1], room_schedule))
 
-        return max(max_depth, counter)
+        return len(assignments)
+
 
 if __name__ == '__main__':
     test = Solution()
     intervals = [Interval(0, 30), Interval(5, 10), Interval(15, 20)]
-    print(test.minMeetingRooms(intervals))
+    print(test.minMeetingRooms(intervals)) # 2
+    print(test.minMeetingRooms([Interval(1, 17), Interval(7, 10), Interval(12, 14)])) # 2
+    print(test.minMeetingRooms([Interval(1,4), Interval(1,5), Interval(2,9), Interval(2,6),
+                                Interval(10,19), Interval(11,14), Interval(9,8)])) # 4
+    print(test.minMeetingRooms([Interval(5,8), Interval(6, 8)])) # 2
