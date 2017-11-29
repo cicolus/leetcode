@@ -1,4 +1,5 @@
 from typing import List
+from heapq import heappop, heappush
 
 """
     Given an array of meeting time intervals consisting of start and end times 
@@ -26,9 +27,21 @@ class Solution:
         :type intervals: List[Interval]
         :rtype: int
         """
+        if not intervals:
+            return 0
         intervals = sorted(intervals, key=lambda x : x.start)
-        print(intervals)
+        counter = 1
+        max_depth = 1
+        curr = intervals[0]
+        for i in range(1, len(intervals)):
+            if intervals[i].start < curr.end:
+                counter += 1
+            else:
+                max_depth = max(counter, max_depth)
+                counter = 1
+                curr = intervals[i]
 
+        return max(max_depth, counter)
 
 if __name__ == '__main__':
     test = Solution()
