@@ -1,9 +1,10 @@
 from typing import List
+from array import array
 
 class DisjointSet(object):
 
     def __init__(self, capacity):
-        self.forest = list(range(capacity)) # type: List[int]
+        self.forest = array('i', list(range(capacity))) # type: List[int]
 
     def find(self, x: int) -> int:
         if self.forest[x] != x:
