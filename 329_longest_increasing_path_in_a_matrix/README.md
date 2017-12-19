@@ -25,7 +25,7 @@ subproblem and we can store the value calculated. To give a more
 concrete sense, when we recurse to an entry in the matrix that is
 larger than all of its neighbors, than the DP value of this entry
 is simple going to be 1, i.e. the following loop in the solution:
-```pythonstub
+```python
 for i, j in neighbors:
     if matrix[i][j] > matrix[x][y]:
         dp[x][y] = max(dp[x][y], 1 + DFS(i, j))
